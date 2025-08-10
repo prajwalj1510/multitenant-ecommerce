@@ -6,17 +6,27 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, ChevronsRightIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useTRPC } from "@/trpc/client"
+import { useQuery } from "@tanstack/react-query"
+import { CategoriesGetManyOutput } from "@/modules/categories/types"
 
 interface CategoriesSidebarProps {
     open: boolean,
     onOpenChange: (open: boolean) => void,
-    data: CustomCategory[],
+    // data: CustomCategory[],
 }
 
-const CategoriesSidebar = ({ open, onOpenChange, data }: CategoriesSidebarProps) => {
+const CategoriesSidebar = ({
+    open,
+    onOpenChange,
+    // data 
+}: CategoriesSidebarProps) => {
 
-    const [parentCategories, setParentCategories] = useState<CustomCategory[] | null>(null)
-    const [selectedCategories, setSelectedCategories] = useState<CustomCategory | null>(null)
+    const trpc = useTRPC()
+    const { data } = useQuery(trpc.categories.getMany.queryOptions())
+
+    const [parentCategories, setParentCategories] = useState<CategoriesGetManyOutput | null>(null)
+    const [selectedCategories, setSelectedCategories] = useState<CategoriesGetManyOutput[0] | null>(null)
 
     const router = useRouter()
 
@@ -30,33 +40,33 @@ const CategoriesSidebar = ({ open, onOpenChange, data }: CategoriesSidebarProps)
         onOpenChange(open)
     }
 
-    const handleCategoryClick = (category: CustomCategory) => {
+    const handleCategoryClick = (category: CategoriesGetManyOutput[0]) => {
 
-        if(category.subcategories && category.subcategories.length >0 ) {
-            setParentCategories(category.subcategories as CustomCategory[])
+        if (category.subcategories && category.subcategories.length > 0) {
+            setParentCategories(category.subcategories as CategoriesGetManyOutput)
             setSelectedCategories(category)
         } else {
             // This is a Leaf category (no subcategories) 
 
-            if(parentCategories && selectedCategories) {
+            if (parentCategories && selectedCategories) {
                 //This is a subcategory - navigate to /category/subcategory
                 router.push(`/${selectedCategories.slug}/${category.slug}`)
-            }else {
+            } else {
                 //This is main category - navigate to /category
 
-                if(category.slug === 'all') {
+                if (category.slug === 'all') {
                     router.push(`/`)
                 } else {
                     router.push(`/${category.slug}`)
                 }
             }
 
-            handleOpenChange(false) 
+            handleOpenChange(false)
         }
     }
 
     const handleBackClick = () => {
-        if(parentCategories) {
+        if (parentCategories) {
             setParentCategories(null)
             setSelectedCategories(null)
         }
