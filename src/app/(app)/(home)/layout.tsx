@@ -1,8 +1,8 @@
 // import { Category } from "@/payload-types";
 import { Suspense } from "react";
-import Footer from "./Footer";
-import { Navbar } from "./Navbar";
-import { SearchFilters, SearchFiltersLoading } from "./search-filters";
+import Footer from "@/modules/home/ui/components/Footer";
+import { Navbar } from '@/modules/home/ui/components/Navbar';
+import { SearchFilters, SearchFiltersLoading } from "@/modules/home/ui/components/search-filters";
 
 // import configPromise from '@payload-config'
 // import { getPayload } from 'payload'
