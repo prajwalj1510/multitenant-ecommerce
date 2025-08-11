@@ -4,6 +4,7 @@ import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { TRPCError } from '@trpc/server';
 import { AUTH_COOKIE } from '../constants';
 import { loginSchema, registerSchema } from '../schemas';
+import { generateAuthCookies } from '../utils';
 
 export const authRouter = createTRPCRouter({
     session: baseProcedure.query(async ({ ctx }) => {
@@ -30,10 +31,10 @@ export const authRouter = createTRPCRouter({
 
             const existingUser = existingData.docs[0]
 
-            if(existingUser) {
+            if (existingUser) {
                 throw new TRPCError({
-                    code:'BAD_REQUEST',
-                    message:'Username already taken',
+                    code: 'BAD_REQUEST',
+                    message: 'Username already taken',
                 })
             }
 
@@ -61,17 +62,24 @@ export const authRouter = createTRPCRouter({
                 })
             }
 
-            const cookies = await getCookies()
+            // const cookies = await getCookies()
+            // cookies.set({
+            //     name: AUTH_COOKIE,
+            //     // name:`${ctx.db.config.cookiePrefix}-token`,
+            //     value: data.token,
+            //     httpOnly: true,
+            //     path: '/',
+            //     // sameSite: 'none',
+            //     // domain: ''
+            //     // TODO: Ensure cross-domain cookie sharing
+            // })
 
-            cookies.set({
-                name: AUTH_COOKIE,
+            await generateAuthCookies({
+                prefix: ctx.db.config.cookiePrefix,
                 value: data.token,
-                httpOnly: true,
-                path: '/',
-                // sameSite: 'none',
-                // domain: ''
-                // TODO: Ensure cross-domain cookie sharing
             })
+
+
         }),
     login: baseProcedure
         .input(loginSchema)
@@ -91,22 +99,26 @@ export const authRouter = createTRPCRouter({
                 })
             }
 
-            const cookies = await getCookies()
+            // const cookies = await getCookies()
+            // cookies.set({
+            //     name: AUTH_COOKIE,
+            //     value: data.token,
+            //     httpOnly: true,
+            //     path: '/',
+            //     // sameSite: 'none',
+            //     // domain: ''
+            //     // TODO: Ensure cross-domain cookie sharing
+            // })
 
-            cookies.set({
-                name: AUTH_COOKIE,
+            await generateAuthCookies({
+                prefix: ctx.db.config.cookiePrefix,
                 value: data.token,
-                httpOnly: true,
-                path: '/',
-                // sameSite: 'none',
-                // domain: ''
-                // TODO: Ensure cross-domain cookie sharing
             })
 
             return data;
         }),
     logout: baseProcedure.mutation(async () => {
-        const cookies = await getCookies() 
+        const cookies = await getCookies()
         cookies.delete(AUTH_COOKIE)
     })
 })
