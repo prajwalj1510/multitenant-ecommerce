@@ -24,7 +24,7 @@ export const CategoryDropdown = ({
 
     const [isOpen, setIsOpen] = useState(false)
     const dropdownRef = useRef<HTMLDivElement>(null)
-    const {getDropdownPosition} = useDropdownPosition(dropdownRef)
+    // const {getDropdownPosition} = useDropdownPosition(dropdownRef)
 
     const onMouseEnter = () => {
         if (category.subcategories) {
@@ -35,7 +35,7 @@ export const CategoryDropdown = ({
 
     const onMouseLeave = () => setIsOpen(false)
 
-    const dropdownPosition = getDropdownPosition()
+    // const dropdownPosition = getDropdownPosition()
 
     // TODO: Potentially improve mobile
     // const toggleDropdown = () => {
@@ -79,7 +79,7 @@ export const CategoryDropdown = ({
             <SubCategoryMenu 
                 category={category}
                 isOpen = {isOpen}
-                position = {dropdownPosition}
+                // position = {dropdownPosition}
             />
         </div>
     )
