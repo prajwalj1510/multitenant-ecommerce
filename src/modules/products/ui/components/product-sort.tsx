@@ -15,7 +15,7 @@ export const ProductSort = () => {
                     filters.sort !== 'curated' && 'bg-transparent border-transparent hover:border-b hover:bg-transparent'
                 )}
                 variant='secondary'
-                onClick={()=> setFilters({sort: 'curated'})}
+                onClick={()=> setFilters({sort: "curated"})}
             >
                 Curated
             </Button>
@@ -27,7 +27,7 @@ export const ProductSort = () => {
                     filters.sort !== 'trending' && 'bg-transparent border-transparent hover:border-b hover:bg-transparent'
                 )}
                 variant='secondary'
-                onClick={()=> setFilters({sort: 'trending'})}
+                onClick={()=> setFilters({sort: "trending"})}
             >
                 Trending
             </Button>
@@ -39,7 +39,7 @@ export const ProductSort = () => {
                     filters.sort !== 'hot_and_new' && 'bg-transparent border-transparent hover:border-b hover:bg-transparent'
                 )}
                 variant='secondary'
-                onClick={()=> setFilters({sort: 'hot_and_new'})}
+                onClick={()=> setFilters({sort: "hot_and_new"})}
             >
                 Hot & New
             </Button>
