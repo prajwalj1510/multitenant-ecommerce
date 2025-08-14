@@ -12,6 +12,19 @@ import { LinkIcon, StarIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Fragment } from "react"
+import dynamic from "next/dynamic"
+// import { CartButton } from "../components/cart-button"  may lead to hydration error, client knows it, but server doesn't matches hydration error pops up.
+// To avoid this, use dynamic 
+
+const CartButton = dynamic(
+    () => import('../components/cart-button').then(
+        (mod) => mod.CartButton,
+    ), 
+    {
+        ssr: false,
+        loading: () => <Button disabled className="bg-pink-400 flex-1">Add to Cart</Button> // <p>Loading</P
+    }
+)
 
 interface ProductViewProps {
     productId: string,
@@ -106,12 +119,10 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                         <div className="border-t lg:border-t-0 lg:border-l h-full">
                             <div className="flex flex-col gap-4 p-6 border-b">
                                 <div className="flex flex-row items-center gap-2">
-                                    <Button
-                                        variant='elevated'
-                                        className="flex-1 bg-pink-400"
-                                    >
-                                        Add to Cart
-                                    </Button>
+                                    <CartButton 
+                                        productId={productId}
+                                        tenantSlug={tenantSlug}
+                                    />
                                     <Button
                                         className="size-12"
                                         variant='elevated'
